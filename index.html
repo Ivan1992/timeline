@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>TL template</title>
+    <script src="vis/dist/vis.js"></script>
+    <link href="vis/dist/vis.css" rel="stylesheet" type="text/css" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+
+    <style type="text/css">
+        body,
+        html {
+            font-family: sans-serif;
+        }
+
+        .label {
+            /* margin-left: -6px; */
+            padding: 0 1px;
+            white-space: nowrap;
+            background: #f9f9f9;
+        }
+
+        .line {
+            /* margin-left: -6px; */
+            margin-top: 3px;
+            padding: 0 3px;
+            height: 7px;
+            background: #FEE0AE url(line-bg.png) repeat-x left top;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .vis-item {
+            background: transparent;
+            border-color: transparent;
+            cursor: pointer;
+        }
+
+        .vis-item-overflow {
+            overflow: visible !important;
+        }
+
+        .vis-timeline {
+            font: 14px Tahoma, Arial, sans-serif;
+            color: #666;
+        }
+
+        .vis-time-axis .vis-grid.vis-minor {
+            border-width: 2px;
+            border-color: grey;
+        }
+
+        .vis-time-axis .vis-grid.vis-major {
+            border-width: 2px;
+            border-color: #F991A3;
+        }
+
+        .vis-content>.vis-itemset>.vis-background {
+            z-index: -1;
+        }
+
+        .vis-content>.vis-itemset>.vis-background>.rpsc-group {
+            background: #eeeeff;
+        }
+
+        .vis-content>.vis-itemset>.vis-background>.rdc-group {
+            background: #ffeeee;
+        }
+
+        .vis-grid.vis-vertical {
+            background:
+                linear-gradient(lightgray, lightgray) 20% bottom / 1px 90% no-repeat,
+                linear-gradient(lightgray, lightgray) 40% bottom / 1px 90% no-repeat,
+                linear-gradient(lightgray, lightgray) 60% bottom / 1px 90% no-repeat,
+                linear-gradient(lightgray, lightgray) 80% bottom / 1px 90% no-repeat;
+        }
+
+        .vis-item-content {
+            width: 100%;
+            padding: 0px !important;
+        }
+
+        .vis-selected {
+            background-color: transparent !important;
+        }
+
+        .vis-left,
+        .vis-timeline,
+        .vis-center,
+        .vis-left>.vis-content,
+        .vis-left .vis-labelset {
+            background-color: transparent !important;
+            border-color: transparent !important;
+            /* border: 0px !important; */
+        }
+
+        .vis-label {
+            display: flex;
+            justify-content: end;
+            align-items: flex-end;
+            left: 48px;
+        }
+
+        .vis-panel.vis-center,
+        .vis-panel.vis-top,
+        .vis-panel.vis-background.vis-vertical {
+            left: 0 !important;
+            width: 100% !important;
+        }
+
+        .vis-center .vis-shadow {
+            visibility: visible !important;
+        }
+
+        /* .vis-panel.vis-left {
+            left: 59.56px !important;
+            border-color: transparent !important;
+        } */
+
+        .vis-panel.vis-top {
+            border-color: transparent;
+        }
+
+        .popover {
+            display: none;
+            position: relative;
+            max-width: 500px;
+            width: 250px;
+        }
+
+        .vis-item.vis-box {
+            text-align: start;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row justify-content-center py-3">
+        <button id="zoomIn" class="btn btn-primary">Zoom in <i class="fas fa-search-plus"></i></button>
+        <button id="zoomOut" class="btn btn-primary mx-3">Zoom out <i class="fas fa-search-minus"></i></button>
+        <button id="resize" class="btn btn-primary">Resize</button>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div id="visualization"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+        var container = document.getElementById('visualization');
+
+        var items = new vis.DataSet([
+            { id: 1, content: 'item 1', start: '1920', end: '1940', group: 1, description: "Здесь что-то" },
+            { id: 2, content: 'item 2', start: '2013-09-14', group: 2, description: "тут длинный текст" },
+            { id: 3, content: 'item 3', start: '1990-02-18', group: 2, description: "description" },
+            { id: 4, content: 'item 4', start: '2000', end: '2014', group: 2, description: "description" },
+            { id: 5, content: 'item 5', start: '1950', end: '1955', group: 2, description: "description" },
+            { id: 6, content: 'item 6', start: '1980-04-27', group: 2, description: "description" },
+            { id: 7, content: 'item 7', start: '1900', group: 2, description: "description" },
+        ]);
+
+        var groups = [
+            {
+                id: 1,
+                content: 'Group 1',
+                className: 'rpsc-group',
+                style: "color: red",
+            },
+            { id: 2, content: 'Group 2', className: 'rdc-group', }
+        ];
+
+        var options = {
+            zoomable: true,
+            horizontalScroll: true,
+            showMajorLabels: false,
+            showMinorLabels: true,
+            width: "100%",
+            /* maxMinorChars: 7, */
+            /* timeAxis: { scale: 'year', step: 10 }, */
+            zoomMin: 315400000000,
+            zoomMax: 12616000000000,
+            /* zoomMax: 6308000000000, */
+            align: 'left',
+            max: new Date(new Date().getFullYear() + 100 + '-01-01'),
+            min: new Date('900-01-01'),
+            showCurrentTime: false,
+            /* format: { minorLabels: { month: '' }, majorLabels: {} }, */
+            template: function (item, element, data) {
+                return '<span class="label">' + data.start.getFullYear() + (data.end ? '-' + data.end.getFullYear() : '') + ': ' + item.content + '</span><div class="line" style="' + (data.end ? '' : 'width:5px;') + (data.group && data.group === 2 ? 'background-color: rgb(0, 248, 245);' : 'background-color: rgb(255, 108, 162);') + '"></div>' +
+                    '<div class="popover fade bs-popover-bottom show" role="tooltip" x-placement="bottom" style=""><div class="arrow"></div><h3 class="popover-header">item 1</h3><div class="popover-body">Здесь что-то</div></div>';
+            },
+            orientation: { axis: 'top', item: 'top' },
+            /*  configure: (option, path) => { return option === 'format' || path.indexOf('format') !== -1 || option === "maxMinorChars" || option === "timeAxis" || path.indexOf('timeAxis') !== -1; }, */
+        };
+
+        var timeline = new vis.Timeline(container, items, groups, options);
+
+        timeline.on("select", function (props) {
+            console.log("Items=" + JSON.stringify(Object.keys(props.items)));
+        });
+        /* timeline.setOptions({width: ($("#visualization").width()+$(".vis-minor").outerWidth())+"px"}); */
+        //console.log("WIdth set to:" + ($("#visualization").width() + $(".vis-minor").outerWidth()));
+
+        $(function () {
+            $("#zoomIn").on("click", function () {
+                timeline.zoomIn(0.2, { animnation: true });
+            });
+            $("#zoomOut").on("click", function () {
+                timeline.zoomOut(0.2, { animnation: true });
+            });
+            $("#resize").on("click", function () {
+                timeline.setOptions({ height: $(window).innerHeight() * 0.9 });
+            });
+
+            $(".vis-item-content").on("click", function(){
+                $(this).find(".popover").toggle();
+                timeline.redraw();
+            });
+
+            /* $(".vis-panel.vis-top").css("width", ($("#visualization").width() + $(".vis-minor").outerWidth())+"px", "important"); */
+            $('[data-toggle="popover"]').popover();
+            /* $('.popover-dismiss').popover({
+                trigger: 'focus'
+            }); */
+        });
+    </script>
+</body>
+
+</html>
