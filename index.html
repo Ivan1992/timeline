@@ -3,147 +3,30 @@
 
 <head>
     <title>TL template</title>
-    <script src="vis/dist/vis.js"></script>
-    <link href="vis/dist/vis.css" rel="stylesheet" type="text/css" />
+    <script src="vis/dist/vis.min.js"></script>
+    <link href="vis/dist/vis.min.css" rel="stylesheet" type="text/css" />
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script> -->
 
-    <style type="text/css">
-        body,
-        html {
-            font-family: sans-serif;
-        }
-
-        .label {
-            /* margin-left: -6px; */
-            padding: 0 1px;
-            white-space: nowrap;
-            background: #f9f9f9;
-        }
-
-        .line {
-            /* margin-left: -6px; */
-            margin-top: 3px;
-            padding: 0 3px;
-            height: 7px;
-            background: #FEE0AE url(line-bg.png) repeat-x left top;
-            border: 1px solid rgba(0, 0, 0, 0.3);
-            border-radius: 4px;
-        }
-
-        .vis-item {
-            background: transparent;
-            border-color: transparent;
-            cursor: pointer;
-        }
-
-        .vis-item-overflow {
-            overflow: visible !important;
-        }
-
-        .vis-timeline {
-            font: 14px Tahoma, Arial, sans-serif;
-            color: #666;
-        }
-
-        .vis-time-axis .vis-grid.vis-minor {
-            border-width: 2px;
-            border-color: grey;
-        }
-
-        .vis-time-axis .vis-grid.vis-major {
-            border-width: 2px;
-            border-color: #F991A3;
-        }
-
-        .vis-content>.vis-itemset>.vis-background {
-            z-index: -1;
-        }
-
-        .vis-content>.vis-itemset>.vis-background>.rpsc-group {
-            background: #eeeeff;
-        }
-
-        .vis-content>.vis-itemset>.vis-background>.rdc-group {
-            background: #ffeeee;
-        }
-
-        .vis-grid.vis-vertical {
-            background:
-                linear-gradient(lightgray, lightgray) 20% bottom / 1px 90% no-repeat,
-                linear-gradient(lightgray, lightgray) 40% bottom / 1px 90% no-repeat,
-                linear-gradient(lightgray, lightgray) 60% bottom / 1px 90% no-repeat,
-                linear-gradient(lightgray, lightgray) 80% bottom / 1px 90% no-repeat;
-        }
-
-        .vis-item-content {
-            width: 100%;
-            padding: 0px !important;
-        }
-
-        .vis-selected {
-            background-color: transparent !important;
-        }
-
-        .vis-left,
-        .vis-timeline,
-        .vis-center,
-        .vis-left>.vis-content,
-        .vis-left .vis-labelset {
-            background-color: transparent !important;
-            border-color: transparent !important;
-            /* border: 0px !important; */
-        }
-
-        .vis-label {
-            display: flex;
-            justify-content: end;
-            align-items: flex-end;
-            left: 48px;
-        }
-
-        .vis-panel.vis-center,
-        .vis-panel.vis-top,
-        .vis-panel.vis-background.vis-vertical {
-            left: 0 !important;
-            width: 100% !important;
-        }
-
-        .vis-center .vis-shadow {
-            visibility: visible !important;
-        }
-
-        /* .vis-panel.vis-left {
-            left: 59.56px !important;
-            border-color: transparent !important;
-        } */
-
-        .vis-panel.vis-top {
-            border-color: transparent;
-        }
-
-        .popover {
-            display: none;
-            position: relative;
-            max-width: 500px;
-            width: 250px;
-        }
-
-        .vis-item.vis-box {
-            text-align: start;
-        }
-    </style>
+    <link href="index.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
     <div class="row justify-content-center py-3">
         <button id="zoomIn" class="btn btn-primary">Zoom in <i class="fas fa-search-plus"></i></button>
         <button id="zoomOut" class="btn btn-primary mx-3">Zoom out <i class="fas fa-search-minus"></i></button>
-        <button id="resize" class="btn btn-primary">Resize</button>
+        <div>
+            <label class="switch">
+                <input id="changeTooltipMode" type="checkbox">
+                <span class="slider"></span>
+            </label>
+            Tooltip show mode
+        </div>
     </div>
 
     <div class="container">
@@ -151,6 +34,20 @@
             <div class="col-12">
                 <div id="visualization"></div>
             </div>
+        </div>
+        <div class="row pt-4">
+            <div class="col-2"><input id="content" type="text" class="form-control" placeholder="Название" /></div>
+            <div class="col-2"><input id="description" type="text" class="form-control" placeholder="Описание" /></div>
+            <div class="col-2"><input id="start" type="text" class="form-control" placeholder="год / начало" /></div>
+            <div class="col-2"><input id="end" type="text" class="form-control" placeholder="окончание (опционально)" />
+            </div>
+            <div class="col-2">
+                <select id="group" class="form-control">
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+            <div class="col-2"><button id="addEvent" class="btn btn-success form-control">Добавить</button></div>
         </div>
     </div>
 
@@ -160,19 +57,34 @@
         var container = document.getElementById('visualization');
 
         var items = new vis.DataSet([
-            { id: 1, content: 'item 1', start: '1920', end: '1940', group: 1, description: "Здесь что-то" },
+            { id: 1, content: 'item 1', start: '1920', end: '1940', group: 2, description: "Здесь что-то" },
             { id: 2, content: 'item 2', start: '2013-09-14', group: 2, description: "тут длинный текст" },
             { id: 3, content: 'item 3', start: '1990-02-18', group: 2, description: "description" },
             { id: 4, content: 'item 4', start: '2000', end: '2014', group: 2, description: "description" },
             { id: 5, content: 'item 5', start: '1950', end: '1955', group: 2, description: "description" },
             { id: 6, content: 'item 6', start: '1980-04-27', group: 2, description: "description" },
             { id: 7, content: 'item 7', start: '1900', group: 2, description: "description" },
+
+            { id: 8, content: 'Собор о «единогласии»', start: '1651-02', group: 1, description: "Собор состоявшийся 11 февраля 1649 года отказался ввести «единогласие» в богослужении вместо «многогласия» по всем церквям (как требовали царский духовник Стефан Вонифатьев и единомысленные с ним «боголюбцы»); однако, царь Алексей Михайлович не утвердил соборного постановления 1649 года о допустимости «многогласия», поддерживаемого Московским патриархом Иосифом. Последний обратился к Константинопольскому патриарху Парфению, который решил этот вопрос в пользу «единогласия». Собравшийся в Москве 9 февраля 1651 года собор утвердил в церквах единогласное пение вместо многогласного." },
+            { id: 9, content: 'Указ о поклонах', start: '1653-02-21', group: 1, description: "Патриарх Никон указал опустить в издании Следованной Псалтири главы о числе поклонов на молитве преподобного Ефрема Сирина и о двуперстном крестном знамении." },
+            { id: 15, content: 'п.Никон рассылает «Память» о замене земных поклонов', start: '1653-03-03', group: 1, description: "В начале Великого поста 1653 года, патриарх Никон разослал по московским церквам «Память» о замене части земных поклонов на молитве Ефрема Сирина поясными и об употреблении троеперстного крестного знамения вместо двуперстного." },
+            { id: 10, content: 'Аввакум попадает в заключение', start: '1653-09', group: 1, description: "Протопопа Аввакума бросают в подвал Андрониевского монастыря, где он просидел 3 дня и 3 ночи «не евши и не пивши». Увещевают принять «новые книги», однако безуспешно. Патриарх Никон велел расстричь его. Но царь заступается, и Аввакум Петров был сослан в Тобольск." },
+            { id: 11, content: 'Собор', start: '1654', end: '1655', group: 1, description: "патриарх Никон устраивает церковный собор, который постановляет провести книжную справу по древним рукописям греческим и славянским. Среди участников собора был епископ Коломенский и Каширский Павел. На соборе он высказался против отмены земных поклонов во время великопостной молитвы Ефрема Сирина. Так как принятая на соборе окончательная формулировка не подразумевала отклонений от старых русских и греческих книг, он подписал соборные постановления, но добавил своё особое мнение: «Смиренный епископ Павел Коломенский и Каширский. А что говорил на святем соборе о поклонех и тот устав харотеиной во оправдание положил зде а другой писмяной». По данным епископ также написал: «Если кто от преданных обычаев святой соборной церкви отымет, или приложит к ним, или каким-либо образом развратит, анафема да будет»." },
+            { id: 12, content: 'п. Никон направляет вопросы п. Паисию', start: '1656', group: 1, description: "Патриарх Никон издаёт послание с вопросами о необходимости унификации русских обрядов по греческим образцам, направил вопросы патриарху Константинопольскому Паисию, который прислал соборный ответ, где отмечал, что разница в обрядах не является преступлением против догматов и признаком ереси и раскола; разные поместные церкви вполне могут отличаться порядками, например, временем совершения литургии или какими перстами должен благословлять священник. Тем временем, в марте 1655 года Никон публично выступил против двуперстия, приказав разбить и сжечь иконы, изображавшие такое перстосложение при совершении крестного знамения. Собор в Москве, проходивший с 25 по 31 марта[31] утвердил текст нового Служебника на основе греческого Служебника венецианского издания 1602 года." },
+            { id: 13, content: 'Перевод еп. Павла Коломенского в Хутынский монастырь', start: '1656-04-13', group: 1, description: "Епископ Павел Коломенский переведён под более строгий надзор в новгородский Хутынский монастырь, где и был, по-видимому, убит." },
+            { id: 14, content: 'Аввакум в Мезени', start: '1664', group: 1, description: "Протопоп Аввакум сослан в Мезень, где он продолжил свою проповедь и поддерживал своих приверженцев, разбросанных по всей России, посланиями, в которых именовал себя «рабом и посланником Исуса Христа», «протосингелом российской церкви»." },
+            { id: 16, content: 'Речь ц. Алексея Михайловича', start: '1666-05-09',  group: 1, description: "Царь Алексей Михайлович произнёс перед Большим Московским церковным собором речь, в которой говорил о том, что на Руси Православная вера насаждена апостолами через Кирилла и Мефодия, Ольгу и Владимира. Эту веру царь назвал чистой пшеницей. Далее он перечислял заблуждения противников реформы («раскольников» или «диаволе семя»), говоривших про церковь хулы: «яко церковь не есть церковь, тайны божественные — не тайны, крещение — не крещение, архиереи — не архиереи, писания — лестна, учения — неправедное, и вся скверна и не благочестна.» Далее царь говорил, что надо очищать пшеницу (церковь) от плевел (раскольников), опираясь на авторитет четырёх «адамантов» : восточных греческих патриархов. В ответ от имени русских архиереев выступил митрополит Иоаким, который согласился с царем, назвав раскольников «врагами и супостами» церкви, и который просил царя помочь покорить врагов архиереям с помощью царской власти." },
+            /* { id: 17, content: 'Указ о поклонах', start: '1651-02-21', end: '1940', group: 1, description: "Здесь что-то" },
+            { id: 18, content: 'Указ о поклонах', start: '1651-02-21', end: '1940', group: 1, description: "Здесь что-то" },
+            { id: 19, content: 'Указ о поклонах', start: '1651-02-21', end: '1940', group: 1, description: "Здесь что-то" },
+            { id: 20, content: 'Указ о поклонах', start: '1651-02-21', end: '1940', group: 1, description: "Здесь что-то" },
+            { id: 21, content: 'Указ о поклонах', start: '1651-02-21', end: '1940', group: 1, description: "Здесь что-то" }, */
         ]);
 
         var groups = [
             {
                 id: 1,
-                content: 'Group 1',
+                content: 'Раскол',
                 className: 'rpsc-group',
                 style: "color: red",
             },
@@ -197,19 +109,13 @@
             /* format: { minorLabels: { month: '' }, majorLabels: {} }, */
             template: function (item, element, data) {
                 return '<span class="label">' + data.start.getFullYear() + (data.end ? '-' + data.end.getFullYear() : '') + ': ' + item.content + '</span><div class="line" style="' + (data.end ? '' : 'width:5px;') + (data.group && data.group === 2 ? 'background-color: rgb(0, 248, 245);' : 'background-color: rgb(255, 108, 162);') + '"></div>' +
-                    '<div class="popover fade bs-popover-bottom show" role="tooltip" x-placement="bottom" style=""><div class="arrow"></div><h3 class="popover-header">item 1</h3><div class="popover-body">Здесь что-то</div></div>';
+                    '<div class="popover fade bs-popover-bottom show" role="tooltip" x-placement="bottom"><div class="arrow"></div><h3 class="popover-header">' + item.start+": "+ item.content + '</h3> <div class="popover-body">' + item.description + '</div></div>';
             },
             orientation: { axis: 'top', item: 'top' },
             /*  configure: (option, path) => { return option === 'format' || path.indexOf('format') !== -1 || option === "maxMinorChars" || option === "timeAxis" || path.indexOf('timeAxis') !== -1; }, */
         };
 
         var timeline = new vis.Timeline(container, items, groups, options);
-
-        timeline.on("select", function (props) {
-            console.log("Items=" + JSON.stringify(Object.keys(props.items)));
-        });
-        /* timeline.setOptions({width: ($("#visualization").width()+$(".vis-minor").outerWidth())+"px"}); */
-        //console.log("WIdth set to:" + ($("#visualization").width() + $(".vis-minor").outerWidth()));
 
         $(function () {
             $("#zoomIn").on("click", function () {
@@ -218,21 +124,49 @@
             $("#zoomOut").on("click", function () {
                 timeline.zoomOut(0.2, { animnation: true });
             });
-            $("#resize").on("click", function () {
-                timeline.setOptions({ height: $(window).innerHeight() * 0.9 });
+            $("#changeTooltipMode").change(function () {
+                if (this.checked) {
+                    $(".popover").css("position", "relative");
+                    $(".popover").css("top", "0");
+                    timeline.redraw();
+                } else {
+                    $(".popover").css("position", "absolute");
+                    $(".popover").css("top", "32px");
+                    timeline.redraw();
+                }
             });
 
-            $(".vis-item-content").on("click", function(){
+
+            $(document).on("click", ".vis-item-content", function () {
                 $(this).find(".popover").toggle();
+                var q = $(this).find(".popover");
+                $(".vis-item-content").not(this).find(".popover").css("display", "none");
                 timeline.redraw();
             });
 
+            $("#addEvent").on("click", function () {
+                var item = { id: uuid(), content: $("input#content").val(), start: $("input#start").val(), description: $("input#description").val(), group: $("select#group").val() };
+                if ($("input#end").val().trim() !== "") {
+                    item.end = $("input#end").val();
+                }
+                console.log(JSON.stringify(item));
+                items._addItem(item);
+                timeline.setItems(items);
+                timeline.redraw();
+            });
             /* $(".vis-panel.vis-top").css("width", ($("#visualization").width() + $(".vis-minor").outerWidth())+"px", "important"); */
-            $('[data-toggle="popover"]').popover();
-            /* $('.popover-dismiss').popover({
-                trigger: 'focus'
-            }); */
+            //$('[data-toggle="popover"]').popover();
         });
+
+        function uuid() {
+            var dt = new Date().getTime();
+            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (dt + Math.random() * 16) % 16 | 0;
+                dt = Math.floor(dt / 16);
+                return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
+            return uuid;
+        }
     </script>
 </body>
 
