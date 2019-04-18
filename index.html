@@ -9,181 +9,57 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
-    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script> -->
-
     <link href="index.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-    <div class="row justify-content-center py-3">
-        <button id="zoomIn" class="btn btn-primary">Zoom in <i class="fas fa-search-plus"></i></button>
-        <button id="zoomOut" class="btn btn-primary mx-3">Zoom out <i class="fas fa-search-minus"></i></button>
-        <div>
-            <label class="switch">
-                <input id="changeTooltipMode" type="checkbox">
-                <span class="slider"></span>
-            </label>
-            Tooltip show mode
-        </div>
+    <div class="header">
+        <h3 class="text-muted">Старообрядческая хронология</h3>
     </div>
 
-    <div id="visualization"></div>
-
     <div class="container">
-        <div class="row pt-4">
+        <div class="row justify-content-center">
+            <button id="zoomIn" class="btn btn-primary">Zoom <i class="fas fa-search-plus"></i></button>
+            <button id="zoomOut" class="btn btn-primary mx-2"> Zoom <i class="fas fa-search-minus"></i></button>
+            <div>
+                <label class="switch">
+                    <input id="changeTooltipMode" type="checkbox">
+                    <span class="slider"></span>
+                </label>
+                Режим показа всплывающих окошек
+            </div>
+        </div>
+        <div id="addRow" class="row py-4">
             <div class="col-2"><input id="content" type="text" class="form-control" placeholder="Название" /></div>
-            <div class="col-2"><input id="description" type="text" class="form-control" placeholder="Описание" /></div>
+            <div class="col-2"><textarea id="description" type="text" class="form-control"
+                    placeholder="Описание"></textarea></div>
             <div class="col-2"><input id="start" type="text" class="form-control" placeholder="год / начало" /></div>
             <div class="col-2"><input id="end" type="text" class="form-control" placeholder="окончание (опционально)" />
             </div>
             <div class="col-2">
                 <select id="group" class="form-control">
-                    <option value="1" selected>1</option>
-                    <option value="2">2</option>
+                    <option value="1" selected>Раскол</option>
+                    <option value="2">Старообрядческие Архиереи</option>
                 </select>
             </div>
             <div class="col-2"><button id="addEvent" class="btn btn-success form-control">Добавить</button></div>
         </div>
+        <div id="loginRow" class="row mb-2 justify-content-center">
+            <div class="col-4"><input id="pw" type="text" class="form-control" placeholder="Пароль" /></div>
+            <div class="col-2"><button id="login" type="text" class="btn btn-danger form-control">Войти</button></div>
+        </div>
     </div>
 
 
-    <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase-database.js"></script>
-
-    <script type="text/javascript">
-
-        var config = {
-            apiKey: "",
-            authDomain: "rpsc-spb.firebaseapp.com",
-            databaseURL: "https://rpsc-spb.firebaseio.com",
-            projectId: "rpsc-spb",
-            storageBucket: "rpsc-spb.appspot.com",
-            messagingSenderId: "854445896107"
-        };
-        firebase.initializeApp(config);
-
-        var db = firebase.firestore();
-
-        db.collection("items").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                console.log(`${doc.id} => ${doc.data()}`);
-            });
-        });
-
-        var container = document.getElementById('visualization');
-
-        var items = new vis.DataSet([
-            { id: 1, content: 'item 1', start: '1920', end: '1940', group: 2, description: "Здесь что-то" },
-            { id: 2, content: 'item 2', start: '2013-09-14', group: 2, description: "тут длинный текст" },
-            { id: 3, content: 'item 3', start: '1990-02-18', group: 2, description: "description" },
-            { id: 4, content: 'item 4', start: '2000', end: '2014', group: 2, description: "description" },
-            { id: 5, content: 'item 5', start: '1950', end: '1955', group: 2, description: "description" },
-            { id: 6, content: 'item 6', start: '1980-04-27', group: 2, description: "description" },
-            { id: 7, content: 'item 7', start: '1800', end: '1900', group: 2, description: "description" },
-
-            { id: 8, content: 'Собор о «единогласии»', start: '1651-02', group: 1, description: "Собор состоявшийся 11 февраля 1649 года отказался ввести «единогласие» в богослужении вместо «многогласия» по всем церквям (как требовали царский духовник Стефан Вонифатьев и единомысленные с ним «боголюбцы»); однако, царь Алексей Михайлович не утвердил соборного постановления 1649 года о допустимости «многогласия», поддерживаемого Московским патриархом Иосифом. Последний обратился к Константинопольскому патриарху Парфению, который решил этот вопрос в пользу «единогласия». Собравшийся в Москве 9 февраля 1651 года собор утвердил в церквах единогласное пение вместо многогласного." },
-            { id: 9, content: 'Указ о поклонах', start: '1653-02-21', group: 1, description: "Патриарх Никон указал опустить в издании Следованной Псалтири главы о числе поклонов на молитве преподобного Ефрема Сирина и о двуперстном крестном знамении." },
-            { id: 15, content: 'п.Никон рассылает «Память» о замене земных поклонов', start: '1653-03-03', group: 1, description: "В начале Великого поста 1653 года, патриарх Никон разослал по московским церквам «Память» о замене части земных поклонов на молитве Ефрема Сирина поясными и об употреблении троеперстного крестного знамения вместо двуперстного." },
-            { id: 10, content: 'Аввакум попадает в заключение', start: '1653-09', group: 1, description: "Протопопа Аввакума бросают в подвал Андрониевского монастыря, где он просидел 3 дня и 3 ночи «не евши и не пивши». Увещевают принять «новые книги», однако безуспешно. Патриарх Никон велел расстричь его. Но царь заступается, и Аввакум Петров был сослан в Тобольск." },
-            { id: 11, content: 'Собор', start: '1654', end: '1655', group: 1, description: "патриарх Никон устраивает церковный собор, который постановляет провести книжную справу по древним рукописям греческим и славянским. Среди участников собора был епископ Коломенский и Каширский Павел. На соборе он высказался против отмены земных поклонов во время великопостной молитвы Ефрема Сирина. Так как принятая на соборе окончательная формулировка не подразумевала отклонений от старых русских и греческих книг, он подписал соборные постановления, но добавил своё особое мнение: «Смиренный епископ Павел Коломенский и Каширский. А что говорил на святем соборе о поклонех и тот устав харотеиной во оправдание положил зде а другой писмяной». По данным епископ также написал: «Если кто от преданных обычаев святой соборной церкви отымет, или приложит к ним, или каким-либо образом развратит, анафема да будет»." },
-            { id: 12, content: 'п. Никон направляет вопросы п. Паисию', start: '1656', group: 1, description: "Патриарх Никон издаёт послание с вопросами о необходимости унификации русских обрядов по греческим образцам, направил вопросы патриарху Константинопольскому Паисию, который прислал соборный ответ, где отмечал, что разница в обрядах не является преступлением против догматов и признаком ереси и раскола; разные поместные церкви вполне могут отличаться порядками, например, временем совершения литургии или какими перстами должен благословлять священник. Тем временем, в марте 1655 года Никон публично выступил против двуперстия, приказав разбить и сжечь иконы, изображавшие такое перстосложение при совершении крестного знамения. Собор в Москве, проходивший с 25 по 31 марта[31] утвердил текст нового Служебника на основе греческого Служебника венецианского издания 1602 года." },
-            { id: 13, content: 'Перевод еп. Павла Коломенского в Хутынский монастырь', start: '1656-04-13', group: 1, description: "Епископ Павел Коломенский переведён под более строгий надзор в новгородский Хутынский монастырь, где и был, по-видимому, убит." },
-            { id: 14, content: 'Аввакум в Мезени', start: '1664', group: 1, description: "Протопоп Аввакум сослан в Мезень, где он продолжил свою проповедь и поддерживал своих приверженцев, разбросанных по всей России, посланиями, в которых именовал себя «рабом и посланником Исуса Христа», «протосингелом российской церкви»." },
-            { id: 16, content: 'Речь ц. Алексея Михайловича', start: '1666-05-09', group: 1, description: "Царь Алексей Михайлович произнёс перед Большим Московским церковным собором речь, в которой говорил о том, что на Руси Православная вера насаждена апостолами через Кирилла и Мефодия, Ольгу и Владимира. Эту веру царь назвал чистой пшеницей. Далее он перечислял заблуждения противников реформы («раскольников» или «диаволе семя»), говоривших про церковь хулы: «яко церковь не есть церковь, тайны божественные — не тайны, крещение — не крещение, архиереи — не архиереи, писания — лестна, учения — неправедное, и вся скверна и не благочестна.» Далее царь говорил, что надо очищать пшеницу (церковь) от плевел (раскольников), опираясь на авторитет четырёх «адамантов» : восточных греческих патриархов. В ответ от имени русских архиереев выступил митрополит Иоаким, который согласился с царем, назвав раскольников «врагами и супостами» церкви, и который просил царя помочь покорить врагов архиереям с помощью царской власти." },
-            { id: 17, content: 'Собор в Москве при патриархе Иоакиме', start: '1681', end: '1682', group: 1, description: "Собор в Москве при патриархе Иоакиме признал необходимой совокупную борьбу духовной и светской властей с усиливавшимся «расколом», просил царя подтвердить постановления Большого Московского собора 1667 года об отсылке упорствующих раскольников к градскому суду, постановил отбирать старопечатные книги и взамен их выдавать исправленные, установил надзор за продажей тетрадей, которые, под видом выписок из священного Писания, содержали в себе хулы на книги церковные." },
-            { id: 18, content: 'Сожжение Аввакума', start: '1682-04-24', group: 1, description: "Пустозерск — сожжение в срубе протопопа Аввакума и трёх его товарищей по тюремному заточению (см. Пустозерские страдальцы) Протопоп Аввакум в момент сожжения, по преданию, предсказал близкую смерть царю Фёдору Алексеевичу." },
-            { id: 19, content: 'Миссионерство п. Питирима', start: '1716', end: '1719', group: 1, description: "Архиепископ Нижегородский Питирим отправляется на Керженец ради миссионерства к старообрядцам с вопросами. В 1719 году Александр Дьякон от имени кержаков подает письменные Нижеградские ответы, в которых изобличается подложность обоих вышеупомянутых сочинений. В этом же году поселение на Керженце старообрядцев было разгромлено царскими войсками под руководством Питирима." },
-        ]);
-
-        var groups = [
-            {
-                id: 1,
-                content: 'Раскол',
-                className: 'rpsc-group',
-                style: "color: red",
-            },
-            { id: 2, content: 'Group 2', className: 'rdc-group', }
-        ];
-
-        var options = {
-            zoomable: true,
-            horizontalScroll: true,
-            showMajorLabels: false,
-            showMinorLabels: true,
-            width: "100%",
-            /* maxMinorChars: 7, */
-            /* timeAxis: { scale: 'year', step: 10 }, */
-            zoomMin: 315400000000,
-            /* zoomMin: 315400000000, */
-            zoomMax: 12616000000000,
-            /* zoomMax: 6308000000000, */
-            align: 'left',
-            max: new Date(new Date().getFullYear() + 100 + '-01-01'),
-            min: new Date('900-01-01'),
-            showCurrentTime: false,
-            /* format: { minorLabels: { month: '' }, majorLabels: {} }, */
-            template: function (item, element, data) {
-                return '<span class="label">' + data.start.getFullYear() + (data.end ? '-' + data.end.getFullYear() : '') + ': ' + item.content + '</span><div class="line" style="' + (data.end ? '' : 'width:5px;') + (data.group && data.group === 2 ? 'background-color: rgb(0, 248, 245);' : 'background-color: rgb(255, 108, 162);') + '"></div>' +
-                    '<div class="popover fade bs-popover-bottom show" role="tooltip" x-placement="bottom"><div class="arrow"></div><h3 class="popover-header">' + item.start + ": " + item.content + '</h3> <div class="popover-body">' + item.description + '</div></div>';
-            },
-            orientation: { axis: 'top', item: 'top' },
-            /*  configure: (option, path) => { return option === 'format' || path.indexOf('format') !== -1 || option === "maxMinorChars" || option === "timeAxis" || path.indexOf('timeAxis') !== -1; }, */
-        };
-
-        var timeline = new vis.Timeline(container, items, groups, options);
-
-        $(function () {
-            $("#zoomIn").on("click", function () {
-                timeline.zoomIn(0.2, { animnation: true });
-            });
-            $("#zoomOut").on("click", function () {
-                timeline.zoomOut(0.2, { animnation: true });
-            });
-            $("#changeTooltipMode").change(function () {
-                if (this.checked) {
-                    $(".popover").css("position", "relative");
-                    $(".popover").css("top", "0");
-                    timeline.redraw();
-                } else {
-                    $(".popover").css("position", "absolute");
-                    $(".popover").css("top", "32px");
-                    timeline.redraw();
-                }
-            });
+    <div id="visualization"></div>
 
 
-            $(document).on("click", ".vis-item-content", function () {
-                $(this).find(".popover").toggle();
-                var q = $(this).find(".popover");
-                $(".vis-item-content").not(this).find(".popover").css("display", "none");
-                timeline.redraw();
-            });
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-firestore.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script>
 
-            $("#addEvent").on("click", function () {
-                var item = { id: uuid(), content: $("input#content").val(), start: $("input#start").val(), description: $("input#description").val(), group: $("select#group").val() };
-                if ($("input#end").val().trim() !== "") {
-                    item.end = $("input#end").val();
-                }
-                console.log(JSON.stringify(item));
-                items._addItem(item);
-                timeline.setItems(items);
-                timeline.redraw();
-            });
-            /* $(".vis-panel.vis-top").css("width", ($("#visualization").width() + $(".vis-minor").outerWidth())+"px", "important"); */
-            //$('[data-toggle="popover"]').popover();
-        });
-
-        function uuid() {
-            var dt = new Date().getTime();
-            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                var r = (dt + Math.random() * 16) % 16 | 0;
-                dt = Math.floor(dt / 16);
-                return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-            });
-            return uuid;
-        }
     </script>
 </body>
 
