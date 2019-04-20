@@ -37,10 +37,6 @@
     border-color: grey;
 }
 
-.vis-panel.vis-top {
-    /* position: relative; */
-}
-
 .vis-time-axis .vis-grid.vis-major {
     border-width: 2px;
     border-color: #F991A3;

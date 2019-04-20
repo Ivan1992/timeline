@@ -101,10 +101,8 @@ $(function () {
         var scroll = $(window).scrollTop();
         if (scroll >= offset.top) {
             header.addClass("sticky");
-            axis.addClass("sticky");
         } else {
             header.removeClass("sticky");
-            axis.removeClass("sticky");
         }
     });
 
