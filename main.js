@@ -21,42 +21,44 @@ $(function () {
             id: 1,
             content: 'Раскол',
             className: 'rpsc-group',
-            style: "color: red",
+            style: "color: blue",
         },
-        { id: 2, content: 'Старообрядческие архиереи', className: 'rdc-group', }
+        { 
+            id: 2,
+            content: 'Старообрядческие архиереи',
+            className: 'rdc-group',
+            style: "color:red"
+        }
     ];
 
     var options = {
-        zoomable: true,
+        zoomable: false,
         horizontalScroll: true,
+        verticalScroll: true,
         showMajorLabels: false,
         showMinorLabels: true,
         width: "100%",
-        /* maxMinorChars: 7, */
-        /* timeAxis: { scale: 'year', step: 10 }, */
         zoomMin: 315400000000,
-        /* zoomMin: 315400000000, */
         zoomMax: 12616000000000,
-        /* zoomMax: 6308000000000, */
         align: 'left',
         max: new Date(new Date().getFullYear() + 100 + '-01-01'),
-        min: new Date('900-01-01'),
+        min: new Date('1500-01-01'),
+        /* min: new Date('900-01-01'), */
         showCurrentTime: false,
         template: function (item, element, data) {
-            return '<span class="label">' + data.start.getFullYear() + (data.end ? '-' + data.end.getFullYear() : '') + ': ' + item.content + '</span><div class="line" style="' + (data.end ? '' : 'width:5px;') + (data.group && data.group === 2 ? 'background-color: rgb(0, 248, 245);' : 'background-color: rgb(255, 108, 162);') + '"></div>' +
+            return '<span class="label">' + data.start.getFullYear() + (data.end ? '-' + data.end.getFullYear() : '') + ': ' + item.content + '</span><div class="line" style="' + (data.end ? '' : 'width:5px;') + '"></div>' +
                 '<div class="popover fade bs-popover-bottom show" role="tooltip" x-placement="bottom"><div class="arrow"></div><h3 class="popover-header">' + item.start + ": " + item.content + '</h3> <div class="popover-body">' + item.description + '</div></div>';
         },
         orientation: { axis: 'top', item: 'top' },
-        /*  configure: (option, path) => { return option === 'format' || path.indexOf('format') !== -1 || option === "maxMinorChars" || option === "timeAxis" || path.indexOf('timeAxis') !== -1; }, */
     };
 
-    var timeline;// = new vis.Timeline(container, items, groups, options);
+    var timeline;
 
-    function refresh(first=false) {
+    function refresh(first = false) {
         db.collection("items").get().then((querySnapshot) => {
             items = [];
             querySnapshot.forEach((doc) => {
-                items.push({id: doc.id, ...doc.data()});
+                items.push({ id: doc.id, ...doc.data() });
             });
             items = new vis.DataSet(items);
             if (first) {
@@ -64,15 +66,16 @@ $(function () {
             } else {
                 timeline.setItems(items);
             }
+            /* timeline.setOptions({autoResize: false}); */
         });
     }
     refresh(true);
 
     $("#zoomIn").on("click", function () {
-        timeline.zoomIn(0.2, { animnation: true });
+        timeline.zoomIn(0.8, { animnation: true });
     });
     $("#zoomOut").on("click", function () {
-        timeline.zoomOut(0.2, { animnation: true });
+        timeline.zoomOut(0.8, { animnation: true });
     });
     $("#changeTooltipMode").change(function () {
         if (this.checked) {
@@ -86,6 +89,24 @@ $(function () {
         }
     });
 
+    var header, offset;
+    
+    $(window).scroll(function () {
+        if (offset == undefined) {
+            header = $(".vis-panel.vis-top");
+            offset = $(".vis-panel.vis-top").offset();
+            return;
+        } 
+
+        var scroll = $(window).scrollTop();
+        if (scroll >= offset.top) {
+            header.addClass("sticky");
+            axis.addClass("sticky");
+        } else {
+            header.removeClass("sticky");
+            axis.removeClass("sticky");
+        }
+    });
 
     $(document).on("click", ".vis-item-content", function () {
         $(this).find(".popover").toggle();
@@ -95,21 +116,26 @@ $(function () {
     });
 
     $("#addEvent").on("click", function () {
-         if (!loggedIn) return;
+        if (!loggedIn) return;
 
-         var item = { content: $("input#content").val(), start: $("input#start").val(), description: $("textarea#description").val(), group: $("select#group").val() };
-         if ($("input#end").val().trim() !== "") {
-             item.end = $("input#end").val();
-         }
-         console.log(item);
-         db.collection("items").add(item).then(docRef => {
-             refresh();
-         })
+        var item = { content: $("input#content").val(), start: $("input#start").val(), description: $("textarea#description").val(), group: $("select#group").val() };
+        if ($("input#end").val().trim() !== "") {
+            item.end = $("input#end").val();
+        }
+        console.log(item);
+        db.collection("items").add(item).then(docRef => {
+            refresh();
+        })
     });
 
     $("#login").on("click", () => {
         checkPw($("#pw").val().trim());
     });
+
+    $("#resize").on("click", () => {
+        timeline.redraw();
+        timeline.setOptions({autoResize: false});
+    })
 
     function checkPw(pw) {
         db.collection("allowed").get().then((querySnapshot) => {
