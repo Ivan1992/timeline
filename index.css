@@ -34,7 +34,7 @@
 
 .vis-time-axis .vis-grid.vis-minor {
     border-width: 2px;
-    border-color: grey;
+    border-color: lightgray;
 }
 
 .vis-time-axis .vis-grid.vis-major {
