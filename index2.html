@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Старообрядческая хронология</title>
+    <script src="vis/dist/vis.min.js"></script>
+    <link href="vis/dist/vis.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <link href="index.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="header">
+        <h3 class="text-muted">Старообрядческая хронология</h3>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <button id="resize" class="btn btn-primary mr-2">Resize</button>
+            <button id="zoomIn" class="btn btn-primary">Zoom <i class="fas fa-search-plus"></i></button>
+            <button id="zoomOut" class="btn btn-primary mx-2"> Zoom <i class="fas fa-search-minus"></i></button>
+            <div>
+                <label class="switch">
+                    <input id="changeTooltipMode" type="checkbox">
+                    <span class="slider"></span>
+                </label>
+                Описание события всегда видно
+            </div>
+        </div>
+        <div id="addRow" class="row py-4">
+            <div class="col-2"><input id="content" type="text" class="form-control" placeholder="Название" /></div>
+            <div class="col-2"><textarea id="description" type="text" class="form-control"
+                    placeholder="Описание"></textarea></div>
+            <div class="col-2"><input id="start" type="text" class="form-control" placeholder="год / начало" /></div>
+            <div class="col-2"><input id="end" type="text" class="form-control" placeholder="окончание (необязательно)" />
+            </div>
+            <div class="col-2">
+                <select id="group" class="form-control">
+                    <option value="1" selected>Раскол</option>
+                    <option value="2">Старообрядческие Архиереи</option>
+                </select>
+            </div>
+            <div class="col-2"><button id="addEvent" class="btn btn-success form-control">Добавить</button></div>
+        </div>
+        <div id="loginRow" class="row mb-2 justify-content-center">
+            <div class="col-4"><input id="pw" type="text" class="form-control" placeholder="Пароль" /></div>
+            <div class="col-2"><button id="login" type="text" class="btn btn-danger form-control">Войти</button></div>
+        </div>
+    </div>
+
+    <div id="visualization"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-firestore.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script>
+
+    </script>
+</body>
+
+</html>

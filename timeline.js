@@ -53,7 +53,7 @@ Timeline.prototype = {
 	rowHeight: 26,
 	paddingTop: 6,
 	paddingBottom: 10,
-	thumbHeight: 64,
+	thumbHeight: 0,/* 64, */
 	thumbRowHeight: 2,
 	thumbPaddingTop: 2,
 	onDataLoad: $.noop,
