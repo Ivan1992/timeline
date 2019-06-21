@@ -14,7 +14,7 @@ body {
 	position: relative;
 	/*width: 800px;*/
 	/*height: 300px;*/
-	font: 11px Tahoma, Arial, sans-serif;
+	font: 16px Tahoma, Arial, sans-serif;
 	color: #666;
 	/*border: 1px solid #ddd;*/
 }
@@ -105,7 +105,7 @@ body {
 	margin-right: -350px;
 	padding: 16px 16px;
 	max-width: 350px;
-	font-size: 12px;
+	font-size: 14px;
 	color: #404040;
 	background: #fff;
 	border: 1px solid #adadad;
@@ -217,7 +217,7 @@ body {
 	top: 24px;
 	padding: 0 3px;
 	height: 5px;
-	background: #FEE0AE url(line-bg.png) repeat-x left top;
+	background: #FEE0AE url(img/line-bg.png) repeat-x left top;
 	border: 1px solid rgba(0,0,0,0.3);
 	border-radius: 4px;
 }
@@ -366,7 +366,7 @@ body {
 	margin-right: 28px;
 	width: 150px;
 	height: 44px;
-	background: url(img/logo-runiv.png) no-repeat;
+	/* background: url(img/logo-runiv.png) no-repeat; */
 }
 
 .timelineHeader .logo-trans {
@@ -375,7 +375,7 @@ body {
 	margin-bottom: -3px;
 	width: 90px;
 	height: 39px;
-	background: url(img/logo-trance.png) no-repeat;
+	/* background: url(img/logo-trance.png) no-repeat; */
 }
 
 .timelineHeader .legend {
@@ -519,7 +519,7 @@ body {
 	width: 200px;
 	height: 10px;
 	/*background: url(/bitrix/components/nowmedia/timeline/templates/.default/img/scale-sprite.png) 10px 15px no-repeat;*/
-	background: url(/bitrix/components/nowmedia/timeline/templates/.default/img/scale-bg.png) no-repeat 17px 100%;
+	background: url(img/scale-bg.png) no-repeat 17px 100%;
 }
 .timelineHeader .scale .list li {
 	float: left;
@@ -541,7 +541,7 @@ body {
 	font-weight: bold;
 	color: #993b24;
 	/*background: url(/bitrix/components/nowmedia/timeline/templates/.default/img/scale-item-bg.png) center bottom no-repeat;*/
-	background: url(/bitrix/components/nowmedia/timeline/templates/.default/img/scale-active-bg.png) center bottom no-repeat;
+	background: url(img/scale-active-bg.png) center bottom no-repeat;
 }
 
 .timelineHeader .search {

@@ -50,7 +50,7 @@ Timeline.prototype = {
 	zoom: 0,
 	zoomYears: 1,
 	yearWidth: 10,
-	rowHeight: 26,
+	rowHeight: 36,
 	paddingTop: 6,
 	paddingBottom: 10,
 	thumbHeight: 0,/* 64, */
