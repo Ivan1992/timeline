@@ -75,7 +75,7 @@ body {
 	margin-top: 3px;
 	padding: 0 3px;
 	height: 5px;
-	background: #FEE0AE url(line-bg.png) repeat-x left top;
+	background: #FEE0AE url(img/line-bg.png) repeat-x left top;
 	border: 1px solid rgba(0,0,0,0.3);
 	border-radius: 4px;
 }

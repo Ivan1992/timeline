@@ -43,7 +43,7 @@ var Timeline = function(options){
 Timeline.prototype = {
 	// public options
 	fastDraw: false,
-	letterWidth: 6,
+	letterWidth: 12,
 	data: [],
 	showSections: [],
 	showAll: true,
@@ -247,7 +247,7 @@ Timeline.prototype.drawSection = function(section, i) {
 			label = $('<span>', {'class': 'label'}).appendTo(el),
 			line = $('<div>', {'class': 'line'+(isDot ? ' dot' : '')}).appendTo(el);
 
-		if (item.detailed) {
+		/* if (item.detailed) {
 			var plus = $('<a>', {'class': 'plus', href: item.detailed}).appendTo(el);
 			plus.css({
 				backgroundColor: section.color
@@ -349,7 +349,7 @@ Timeline.prototype.drawSection = function(section, i) {
 					});
 				});
 			});
-		}
+		} */
 
 		if (item.tooltip) {
 			var tooltip = $('<div>', {'class': 'tooltip'}).appendTo(el);
@@ -376,6 +376,8 @@ Timeline.prototype.drawSection = function(section, i) {
 				});
 				tooltipLinks.appendTo(tooltipContent);
 			}
+
+			$("<div>", {'class': 'cd-modal-action'}).html('<a href="#0" class="btn" data-type="modal-trigger">Подробнее</a><span class="cd-modal-bg"></span>').appendTo(tooltipContent);
 
 			timeline.tooltips.push(tooltip[0]);
 

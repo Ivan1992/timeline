@@ -85,6 +85,14 @@
         });
     });
 
+    /* timelineCanvas.hammer().bind("panleft panright",function(ev) {
+        timelineCanvasMove({pageX: ev.gesture.center.x + ev.gesture.deltaX, pageY: ev.gesture.center.y + ev.gesture.deltaY})
+    });
+    timelineCanvas.hammer().bind("pandown",function(ev) {
+        timelineCanvasStartX = timelineCanvas[0].scrollLeft+ev.gesture.center.x + ev.gesture.deltaX;
+        timelineCanvasStartY = timelineCanvas[0].scrollTop+ev.gesture.center.y + ev.gesture.deltaY;
+    }); */
+
     $document.on('keydown', function(e){
         switch (e.which) {
             case 37: // left
