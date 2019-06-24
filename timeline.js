@@ -362,7 +362,7 @@ Timeline.prototype.drawSection = function(section, i) {
 			//tooltip.html(item.tooltip);
 
 			if (item.image) {
-				$('<img>', {src: item.image}).appendTo(tooltip);
+				$('<img >', {src: item.image, style: "max-width: 150px"}).appendTo(tooltip);
 			}
 
 			var tooltipContent = $('<div>', {'class': 'content'}).html(item.tooltip).appendTo(tooltip);
@@ -377,7 +377,11 @@ Timeline.prototype.drawSection = function(section, i) {
 				tooltipLinks.appendTo(tooltipContent);
 			}
 
-			$("<div>", {'class': 'cd-modal-action'}).html('<a href="#0" class="btn" data-type="modal-trigger">Подробнее</a><span class="cd-modal-bg"></span>').appendTo(tooltipContent);
+			var div = $("<div>").html('<a class="modals" href="#detailsModal">Подробнее...</a>');
+			div.on("click", function() {
+				$("#detailsModal .modal-content").html(item.tooltip);
+			});
+			div.appendTo(tooltipContent);
 
 			timeline.tooltips.push(tooltip[0]);
 

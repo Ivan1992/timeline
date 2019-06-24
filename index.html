@@ -2,74 +2,68 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-	<title>Старообрядческая хронология</title>
-	<link href="timeline.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Старообрядческая хронология</title>
+    <link href="timeline.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.0/animate.min.css">
+    <link href="modal.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
 
-	<div id="animatedModal">
-		<!--THIS IS IMPORTANT! to close the modal, the class name has to match the name given on the ID  class="close-animatedModal" -->
-		<div class="close-animatedModal">
-			CLOSE MODAL
-		</div>
+    <div id="detailsModal">
+        <div class="close-detailsModal"></div>
+        <div class="modal-content"></div>
+    </div>
 
-		<div class="modal-content">
-			<p>
-				Hello world!
-			</p>
-			<!--Your modal content goes here-->
-		</div>
-	</div>
+    <div class="timelineWrap">
+        <div class="timelineHeader">
+            <div class="legend">
+                <a class="button" href="#">Легенда</a>
+                <div class="legend-wrap">
+                    <a href="#" class="legend-close">x</a>
+                    <ul class="list"></ul>
+                </div>
+            </div>
+            <!-- END .legend -->
 
-	<div class="timelineWrap">
-		<div class="timelineHeader">
-			<div class="legend">
-				<a class="button" href="#">Легенда</a>
-				<div class="legend-wrap">
-					<a href="#" class="legend-close">x</a>
-					<ul class="list"></ul>
-				</div>
-			</div><!-- END .legend -->
+            <div class="scale">
+                <span class="title">Масштаб ленты:</span>
+                <ul class="list">
+                    <li><a data-zoom="0" href="#">1 год</a></li>
+                    <li><a data-zoom="1" href="#">5 лет</a></li>
+                    <li><a data-zoom="2" class="active" href="#">10 лет</a></li>
+                    <li><a data-zoom="3" href="#">50 лет</a></li>
+                </ul>
+            </div>
+            <!-- END .scale -->
 
-			<div class="scale">
-				<span class="title">Масштаб ленты:</span>
-				<ul class="list">
-					<li><a data-zoom="0" href="#">1 год</a></li>
-					<li><a data-zoom="1" href="#">5 лет</a></li>
-					<li><a data-zoom="2" class="active" href="#">10 лет</a></li>
-					<li><a data-zoom="3" href="#">50 лет</a></li>
-				</ul>
-			</div><!-- END .scale -->
+            <div class="buttons">
+                <button class="sectionTitlesButton down">Названия секций</button>
+                <button class="fullscreenButton">Полноэкранный режим</button>
+            </div>
+        </div>
+        <!-- END #header -->
 
-			<a id="demo01" href="#animatedModal">DEMO01</a>
+        <div class="timelineCanvas"></div>
+        <div class="timelineThumb"></div>
+    </div>
+    <!-- .timelineWrap -->
 
-			<div class="buttons">
-				<button class="sectionTitlesButton down">Названия секций</button>
-				<button class="fullscreenButton">Полноэкранный режим</button>
-			</div>
-		</div><!-- END #header -->
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script type="text/javascript" src="hammer.min.js"></script>
+    <script type="text/javascript" src="jquery.hammer.js"></script>
+    <script type="text/javascript" src="timeline.js"></script>
+    <script type="text/javascript" src="header.js"></script>
+    <script type="text/javascript" src="initial.js"></script>
+    <script type="text/javascript" src="animatedModal.min.js"></script>
 
-		<div class="timelineCanvas"></div>
-		<div class="timelineThumb"></div>
-	</div><!-- .timelineWrap -->
-
-	<script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
-	<script type="text/javascript" src="hammer.min.js"></script>
-	<script type="text/javascript" src="jquery.hammer.js"></script>
-	<script type="text/javascript" src="timeline.js"></script>
-	<script type="text/javascript" src="header.js"></script>
-	<script type="text/javascript" src="obfs.js"></script>
-	<script type="text/javascript" src="animatedModal.min.js"></script>
-
-	<script>
-		$("#demo01").animatedModal();
-	</script>
+    <script>
+        /* $("a.modals").animatedModal(); */
+    </script>
 </body>
 
 </html>
