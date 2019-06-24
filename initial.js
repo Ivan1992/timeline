@@ -18,7 +18,10 @@
             timeline.setData(arr);
             timeline.onDataLoad(arr);
             timeline.draw();
-            $("a.modals").animatedModal({ color: $(this).parent(".section-bg").backgroundColor });
+            $("a.modals").each( function(i,obj) { 
+                var color = $(this).parents("div.section").find("div.section-bg").css("backgroundColor");
+                $(this).animatedModal({color: color});
+            });
         }
     }
 

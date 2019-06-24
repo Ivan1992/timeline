@@ -1,10 +1,10 @@
-*,
+/* *,
 *::after,
 *::before {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-}
+} */
 
 body {
     font-size: 1.6rem;
@@ -39,7 +39,7 @@ a {
 
 .modal-content::after {
     /* gradient overlay at bottom of modal window */
-    content: '';
+    /* content: '';
     position: absolute;
     left: 0;
     bottom: 0;
@@ -48,7 +48,7 @@ a {
     pointer-events: none;
     background: transparent;
     background: -webkit-linear-gradient( bottom, #34383c, rgba(52, 56, 60, 0));
-    background: linear-gradient(to top, #34383c, rgba(52, 56, 60, 0));
+    background: linear-gradient(to top, #34383c, rgba(52, 56, 60, 0)); */
 }
 
 #detailsModal .modal-content {
