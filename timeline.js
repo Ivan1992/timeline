@@ -378,7 +378,7 @@ Timeline.prototype.drawSection = function(section, i) {
                 tooltipLinks.appendTo(tooltipContent);
             }
             //if (item.fulltext) {
-            console.log(item.fulltext);
+            //console.log(item.fulltext);
             var div = $("<div>").html(`<a class="modals section${i}Link" href="#section${i}">Подробнее...</a>`);
             div.on("click", function() {
                 $(`#section${i} .modal-content`).html(item.tooltip);
