@@ -2,7 +2,7 @@
     var showSectionTitles = true;
 
     const http = new XMLHttpRequest();
-    const url = "https://cdn.contentful.com/spaces/urwi2cb4sy5x/environments/master/entries?access_token=qcarnwXClkOkzzaM5E4miBW1__07GyU_GNSuuDEATM&include=10&content_type=section";
+    const url = "https://cdn.contentful.com/spaces/urwi2cb4sy5x/environments/master/entries?access_token=0qcarnwXClkOkzzaM5E4miBW1__07GyU_GNSuuDEATM&include=10&content_type=section";
 
     var timelineData = [];
     http.onreadystatechange = function() {
@@ -140,5 +140,9 @@
         showSectionTitles = !showSectionTitles;
         $(this).toggleClass('down', showSectionTitles);
         timeline.sectionTitles.toggle(showSectionTitles);
+    });
+    
+    timelineHeader.find("#sources").click(e => {
+
     });
 })();

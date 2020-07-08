@@ -381,7 +381,7 @@ Timeline.prototype.drawSection = function(section, i) {
 			div.on("click", function() {
 				$("#detailsModal .modal-content").html(item.tooltip);
 			});
-			div.appendTo(tooltipContent);
+			//div.appendTo(tooltipContent);
 
 			timeline.tooltips.push(tooltip[0]);
 
